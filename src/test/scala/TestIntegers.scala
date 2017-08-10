@@ -1,4 +1,4 @@
-import main.scala.integers.Integer
+import integers.Integer
 import org.scalatest.FunSuite
 
 class TestIntegers extends FunSuite {
@@ -44,5 +44,12 @@ class TestIntegers extends FunSuite {
              myJ = Integer(j);
              myK = Integer(k)
         ) assert(myI * (myJ + myK) == myI * myJ + myI * myK)
+    }
+    
+    // Enumeration
+    test("Countable") {
+        val expected = 0 :: ((1 to MAX_TO_TEST) flatMap { case i => List(i, -i) } toList)
+        val comparisons = expected zip (Integer enumerate)
+        comparisons foreach { case (x, i) => assert(Integer(x) == i) }
     }
 }

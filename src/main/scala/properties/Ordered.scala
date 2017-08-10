@@ -1,4 +1,4 @@
-package main.scala.properties
+package properties
 
 /** The types of comparisons possible in a totally ordered set. */
 abstract class Comparison

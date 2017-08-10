@@ -1,4 +1,4 @@
-import main.scala.naturals.NaturalNumber
+import naturals.NaturalNumber
 import org.scalatest.FunSuite
 
 class TestNaturals extends FunSuite {
@@ -21,5 +21,12 @@ class TestNaturals extends FunSuite {
         for (i <- 0 to MAX_TO_TEST; j <- 0 to MAX_TO_TEST)
             assertResult(NaturalNumber(i + j))
             { NaturalNumber(i) + NaturalNumber(j) }
+    }
+    
+    // Countable
+    
+    test("Countable") {
+        val comparisons = (0 to MAX_TO_TEST) zip (NaturalNumber enumerate)
+        comparisons foreach { case (i, n) => assert(NaturalNumber(i) == n) }
     }
 }

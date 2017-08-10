@@ -1,7 +1,7 @@
-package main.scala.integers
+package integers
 
-import main.scala.naturals._
-import main.scala.properties.{Comparison, GreaterThan, LessThan, Equal, Ordered, Ring}
+import naturals._
+import properties._
 
 /** The Ring of Integers
   *
@@ -18,7 +18,9 @@ import main.scala.properties.{Comparison, GreaterThan, LessThan, Equal, Ordered,
   * together.  The axioms defining a [[https://en.wikipedia.org/wiki/Ring_(mathematics) ring]]
   * specify the relationship between addition and multiplication that must exist.
   */
-abstract class Integer extends Ring[Integer] with Ordered[Integer] {
+abstract class Integer extends Ring[Integer]
+    with Ordered[Integer]
+    with Countable[Integer] {
     
     /** A convenience shorthand notation */
     def -(that: Integer) = this + (- that)
@@ -27,7 +29,7 @@ abstract class Integer extends Ring[Integer] with Ordered[Integer] {
     def priorNatural: Integer
 }
 
-object Integer {
+object Integer extends Countable[Integer] {
     def apply(x: Int): Integer = x match {
         case 0 => IntegerZero
         case _ if x > 0 => PositiveInteger(NaturalNumber(x))
@@ -38,6 +40,9 @@ object Integer {
         case NaturalZero => IntegerZero
         case Successor(_) => PositiveInteger(x)
     }
+    
+    /** The canonical enumeration of integers goes {0, 1, -1, 2, -2, ...} */
+    def enumerate: Stream[Integer] = IntegerZero enumerate
 }
 
 object IntegerZero extends Integer {
@@ -60,6 +65,8 @@ object IntegerZero extends Integer {
         case PositiveInteger(_) => LessThan
     }
     
+    override def enumerate: Stream[Integer] =
+        this #:: (PositiveInteger(Successor(NaturalZero)) enumerate)
 }
 
 /** Positive integers are largely wrappers for [[NaturalNumber natural numbers]]. */
@@ -95,6 +102,8 @@ case class PositiveInteger(n: NaturalNumber) extends Integer {
         case NegativeInteger(_) | IntegerZero => GreaterThan
         case PositiveInteger(o) => n compare o
     }
+    
+    override def enumerate: Stream[Integer] = this #:: (-this enumerate)
 }
 
 /**
@@ -124,4 +133,6 @@ case class NegativeInteger(n: NaturalNumber) extends Integer {
         case PositiveInteger(_) | IntegerZero => LessThan
         case NegativeInteger(o) => o compare n
     }
+    
+    override def enumerate: Stream[Integer] = this #:: (PositiveInteger(Successor(n)) enumerate)
 }

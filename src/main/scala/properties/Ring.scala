@@ -1,4 +1,4 @@
-package main.scala.properties
+package properties
 
 /** Commutative Ring with Unit
   *
@@ -7,7 +7,7 @@ package main.scala.properties
   * A ring with unit includes a multiplicative identity (e.g. 1), and a commutative ring
   * means that multiplication is commutative.
   *
-  * Clearly this extends a commutative monoid.  Between these two categories lies the
+  * Clearly this extends a [[Monoid commutative monoid]].  Between these two categories lies the
   * category of groups (and abelian groups).  However, the group closure of the natural
   * numbers provides a full ring structure, so we skip right to rings.
   */

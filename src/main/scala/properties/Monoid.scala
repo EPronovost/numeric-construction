@@ -1,4 +1,4 @@
-package main.scala.properties
+package properties
 
 /** Commutative Monoid
   *
