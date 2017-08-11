@@ -1,5 +1,6 @@
-import integers.Integer
+import integers.{Integer, IntegerZero}
 import org.scalatest.FunSuite
+import properties.RingDivisionError
 
 class TestIntegers extends FunSuite {
     
@@ -52,4 +53,36 @@ class TestIntegers extends FunSuite {
         val comparisons = expected zip (Integer enumerate)
         comparisons foreach { case (x, i) => assert(Integer(x) == i) }
     }
+    
+    // Modulo operation
+    test("Modulo") {
+        for (i <- 1 to MAX_TO_TEST;
+             j <- 1 to MAX_TO_TEST)
+            assertResult(Integer(i % j)) { Integer(i) % Integer(j) }
+        
+        for (i <- -MAX_TO_TEST to MAX_TO_TEST;
+             j <- -MAX_TO_TEST to MAX_TO_TEST;
+             myI = Integer(i);
+             myJ = Integer(j);
+             modulo = myI % myJ)
+            assert(myJ.cosetOf(myI - modulo) == IntegerZero)
+    }
+    
+    // Division
+    test("Division") {
+        for (i <- -MAX_TO_TEST_MULTIPLICATION to MAX_TO_TEST_MULTIPLICATION;
+             if (i != 0);
+             j <- -MAX_TO_TEST_MULTIPLICATION to MAX_TO_TEST_MULTIPLICATION;
+             product = Integer(i) * Integer(j))
+            assertResult(Integer(j)) {product / Integer(i)}
+        
+        for (i <- -MAX_TO_TEST to MAX_TO_TEST)
+            assertThrows[RingDivisionError] { Integer(i) / IntegerZero }
+        
+        for (i <- -MAX_TO_TEST to MAX_TO_TEST;
+             j <- -MAX_TO_TEST to MAX_TO_TEST;
+             if j != 0 && i % j != 0)
+            assertThrows[RingDivisionError] { Integer(i) / Integer(j) }
+    }
+    
 }

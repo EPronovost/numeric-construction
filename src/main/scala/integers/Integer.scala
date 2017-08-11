@@ -3,6 +3,8 @@ package integers
 import naturals._
 import properties._
 
+import scala.util.{Failure, Try}
+
 /** The Ring of Integers
   *
   * The ring of [[https://en.wikipedia.org/wiki/Integer integers]]
@@ -27,6 +29,11 @@ abstract class Integer extends Ring[Integer]
     
     /** The [[Integer]] of the natural number precessor. */
     def priorNatural: Integer
+    
+    def divide(that: Integer): Try[Integer]
+    
+    def %(that: Integer): Integer = that.cosetOf(this)
+    def /(that: Integer): Integer = that.divide(this).get
 }
 
 object Integer extends Countable[Integer] {
@@ -43,6 +50,29 @@ object Integer extends Countable[Integer] {
     
     /** The canonical enumeration of integers goes {0, 1, -1, 2, -2, ...} */
     def enumerate: Stream[Integer] = IntegerZero enumerate
+    
+    val integerOne = PositiveInteger(Successor(NaturalZero))
+    
+    def abs(x: Integer): Integer = x match {
+        case NegativeInteger(n) => PositiveInteger(n)
+        case _ => x
+    }
+    
+    /**
+      * The gcd is computed with
+      * [[https://en.wikipedia.org/wiki/Euclidean_algorithm Euclid's algorithm]]
+      * since ''Z'' is a [[https://en.wikipedia.org/wiki/Euclidean_domain Euclidian Domain]].
+      * */
+    def gcd(a: Integer, b: Integer): Integer = {
+        if ((a < IntegerZero) || (b < IntegerZero)) return gcd(abs(a), abs(b))
+        if (a < b) return gcd(b, a)
+        if (b == IntegerZero) throw RingDivisionError("No GCD of 0")
+        
+        a % b match {
+            case IntegerZero => b
+            case _ => gcd(b, a % b)
+        }
+    }
 }
 
 object IntegerZero extends Integer {
@@ -59,14 +89,18 @@ object IntegerZero extends Integer {
     /** Multiplicative properties follow from the ring axioms. */
     def *(that: Integer) = this
     
-    override def compare(that: Integer): Comparison = that match {
+    def compare(that: Integer): Comparison = that match {
         case NegativeInteger(_) => GreaterThan
         case IntegerZero => Equal
         case PositiveInteger(_) => LessThan
     }
     
-    override def enumerate: Stream[Integer] =
+    def enumerate: Stream[Integer] =
         this #:: (PositiveInteger(Successor(NaturalZero)) enumerate)
+    
+    def cosetOf(that: Integer) = that
+    
+    def divide(that: Integer) = Failure(RingDivisionError("Division by zero"))
 }
 
 /** Positive integers are largely wrappers for [[NaturalNumber natural numbers]]. */
@@ -98,12 +132,28 @@ case class PositiveInteger(n: NaturalNumber) extends Integer {
         case PositiveInteger(_) => this.priorNatural * that + that
     }
     
-    override def compare(that: Integer): Comparison = that match {
+    def compare(that: Integer): Comparison = that match {
         case NegativeInteger(_) | IntegerZero => GreaterThan
         case PositiveInteger(o) => n compare o
     }
     
-    override def enumerate: Stream[Integer] = this #:: (-this enumerate)
+    def enumerate: Stream[Integer] = this #:: (-this enumerate)
+    
+    def cosetOf(that: Integer): Integer = that match {
+        case NegativeInteger(_) => (this cosetOf -that) match {
+            case IntegerZero => IntegerZero
+            case m => this - m
+        }
+        case _ if that < this => that
+        case _ if that >= this => this cosetOf (that - this)
+    }
+    
+    def divide(that: Integer): Try[Integer] = Try { that match {
+        case NegativeInteger(_) => -(this.divide(-that).get)
+        case IntegerZero => IntegerZero
+        case _ if that >= this => this.divide(that - this).get + Integer.integerOne
+        case _ => throw RingDivisionError("does not divide")
+    }}
 }
 
 /**
@@ -129,10 +179,15 @@ case class NegativeInteger(n: NaturalNumber) extends Integer {
     
     def *(that: Integer) = -(-this * that)
     
-    override def compare(that: Integer): Comparison = that match {
+    def compare(that: Integer): Comparison = that match {
         case PositiveInteger(_) | IntegerZero => LessThan
         case NegativeInteger(o) => o compare n
     }
     
-    override def enumerate: Stream[Integer] = this #:: (PositiveInteger(Successor(n)) enumerate)
+    def enumerate: Stream[Integer] = this #:: (PositiveInteger(Successor(n)) enumerate)
+    
+    def cosetOf(that: Integer) = -this cosetOf that
+    
+    def divide(that: Integer): Try[Integer] = Try { -((-this).divide(that).get) }
 }
+
