@@ -7,5 +7,5 @@ package properties
   * closed and commutative.
   */
 trait Monoid[T] {
-    def +(that: T): T
+  def +(that: T): T
 }

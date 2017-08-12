@@ -12,16 +12,16 @@ package properties
   * numbers provides a full ring structure, so we skip right to rings.
   */
 trait Ring[T] extends Monoid[T] {
-    /** The ring operations. */
-    def unary_- : T
-    def -(that: T): T
-    def *(that: T): T
-    
-    /** Cosets and modulo operation. */
-    def cosetOf(that: T): T
-    def %(that: T): T
-    
-    def /(that: T): T
+  /** The ring operations. */
+  def unary_- : T
+  def -(that: T): T
+  def *(that: T): T
+  
+  /** Cosets and modulo operation. */
+  def cosetOf(that: T): T
+  def %(that: T): T
+  
+  def /(that: T): T
 }
 
 case class RingDivisionError(message: String) extends ArithmeticException(message)

@@ -9,5 +9,5 @@ package properties
   * the "fundamental" countably infinite set.
   */
 trait Countable[T] {
-    def enumerate: Stream[T]
+  def enumerate: Stream[T]
 }

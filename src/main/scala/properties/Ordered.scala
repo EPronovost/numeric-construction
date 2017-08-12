@@ -13,11 +13,11 @@ final case object GreaterThan extends Comparison
   * defined for all pairs in (''T'', ''T'').
   */
 trait Ordered[T] {
-    def compare(that: T): Comparison
-    
-    def <(that: T): Boolean = this.compare(that) == LessThan
-    def >(that: T): Boolean = this.compare(that) == GreaterThan
-    
-    def <=(that: T): Boolean = !(this > that)
-    def >=(that: T): Boolean = !(this < that)
+  def compare(that: T): Comparison
+
+  def <(that: T): Boolean = this.compare(that) == LessThan
+  def >(that: T): Boolean = this.compare(that) == GreaterThan
+  
+  def <=(that: T): Boolean = !(this > that)
+  def >=(that: T): Boolean = !(this < that)
 }
