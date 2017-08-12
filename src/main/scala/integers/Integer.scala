@@ -35,6 +35,9 @@ abstract class Integer extends Ring[Integer] with Ordered[Integer] with Countabl
 }
 
 object Integer extends Countable[Integer] {
+  
+  final def IntegerOne = PositiveInteger(Successor(NaturalZero))
+  
   def apply(x: Int): Integer = x match {
     case 0 => IntegerZero
     case _ if x > 0 => PositiveInteger(NaturalNumber(x))
@@ -48,8 +51,6 @@ object Integer extends Countable[Integer] {
   
   /** The canonical enumeration of integers goes {0, 1, -1, 2, -2, ...} */
   def enumerate: Stream[Integer] = IntegerZero.enumerate
-  
-  final def IntegerOne: Integer = PositiveInteger(Successor(NaturalZero))
   
   def abs(x: Integer): Integer = x match {
     case NegativeInteger(n) => PositiveInteger(n)
@@ -66,6 +67,12 @@ object Integer extends Countable[Integer] {
     else if (a < b) gcd(b, a)
     else if (b == IntegerZero) a
     else gcd(b, a % b)
+  }
+  
+  def sign(i: Integer): Integer = i match {
+    case PositiveInteger(_) => IntegerOne
+    case NegativeInteger(_) => -IntegerOne
+    case IntegerZero => IntegerZero
   }
 }
 
@@ -98,7 +105,7 @@ object IntegerZero extends Integer {
 }
 
 /** Positive integers are largely wrappers for [[NaturalNumber natural numbers]]. */
-case class PositiveInteger(n: NaturalNumber) extends Integer {
+final case class PositiveInteger(n: NaturalNumber) extends Integer {
   assert(n != NaturalZero)
     
   override def toString: String = n.toString
@@ -155,7 +162,7 @@ case class PositiveInteger(n: NaturalNumber) extends Integer {
   *
   * Most of the definitions are reductions to positive base cases.
   */
-case class NegativeInteger(n: NaturalNumber) extends Integer {
+final case class NegativeInteger(n: NaturalNumber) extends Integer {
   assert(n != NaturalZero)
     
   override def toString: String = "-" + n.toString

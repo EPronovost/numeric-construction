@@ -63,7 +63,7 @@ object NaturalZero extends NaturalNumber {
 }
 
 /** Axiom 6: For every natural number ''n'', its successor ''S(n)'' is a natural number. */
-case class Successor(n: NaturalNumber) extends NaturalNumber {
+final case class Successor(n: NaturalNumber) extends NaturalNumber {
     
   /**
     * Axiom 7: For all ''m, n,'' ''m = n'' iff ''S(m) = S(n)''
