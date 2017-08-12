@@ -1,7 +1,5 @@
 package properties
 
-import scala.util.Try
-
 /** Commutative Ring with Unit
   *
   * A [[https://en.wikipedia.org/wiki/Ring_(mathematics) ring]] is a set equipped with two

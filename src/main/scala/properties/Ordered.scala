@@ -1,10 +1,10 @@
 package properties
 
 /** The types of comparisons possible in a totally ordered set. */
-abstract class Comparison
-object LessThan extends Comparison
-object Equal extends Comparison
-object GreaterThan extends Comparison
+sealed trait Comparison
+final case object LessThan extends Comparison
+final case object Equal extends Comparison
+final case object GreaterThan extends Comparison
 
 /** Total Ordering
   *

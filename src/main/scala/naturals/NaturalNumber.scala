@@ -19,22 +19,22 @@ abstract class NaturalNumber extends Monoid[NaturalNumber]
     
     /** Get the readable digit expansion of a number. */
     def getDigits: List[Char] = this match {
-        case NaturalZero => List(digits head)
-        case Successor(n) => incrementDigits(n getDigits)
+        case NaturalZero => List(digits.head)
+        case Successor(n) => incrementDigits(n.getDigits)
     }
     
     /** There's nothing special about base 10.  Choose whatever representation you want! */
     val digits = List('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e')
-    val representationBase = digits length
+    val representationBase = digits.length
     
     def incrementDigits(ds: List[Char]): List[Char] = ds match {
-        case List() => List((digits tail) head)
-        case d :: rest if (d == (digits last)) => (digits head) :: incrementDigits(rest)
-        case d :: rest => digits((digits indexOf d) + 1) :: rest
+        case List() => List(digits(1))
+        case d :: rest if (d == digits.last) => digits.head :: incrementDigits(rest)
+        case d :: rest => digits(digits.indexOf(d) + 1) :: rest
     }
     
     override def enumerate: Stream[NaturalNumber] =
-        this #:: (Successor(this) enumerate)
+        this #:: Successor(this).enumerate
 }
 
 object NaturalNumber extends Countable[NaturalNumber] {
@@ -43,7 +43,7 @@ object NaturalNumber extends Countable[NaturalNumber] {
         case _ if (x > 0) => Successor(NaturalNumber(x - 1))
     }
     
-    override def enumerate: Stream[NaturalNumber] = NaturalZero enumerate
+    override def enumerate: Stream[NaturalNumber] = NaturalZero.enumerate
 }
 
 /**
