@@ -4,7 +4,8 @@ import properties._
 
 /** The Natural Numbers
   *
-  * The natural numbers, commonly denoted ''N'', is the set { 0, 1, 2, ... }.
+  * The [[https://en.wikipedia.org/wiki/Natural_number natural numbers]],
+  * commonly denoted ''N'', is the set { 0, 1, 2, ... }.
   * This set forms a [[Monoid commutative monoid]] under addition.
   *
   * The natural numbers can be constructed axiomatically using the

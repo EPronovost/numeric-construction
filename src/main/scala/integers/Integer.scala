@@ -74,6 +74,8 @@ object Integer extends Countable[Integer] {
     case NegativeInteger(_) => -IntegerOne
     case IntegerZero => IntegerZero
   }
+  
+  //TODO: Factorize
 }
 
 object IntegerZero extends Integer {
