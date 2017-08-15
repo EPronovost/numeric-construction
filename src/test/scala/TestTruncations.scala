@@ -1,7 +1,7 @@
 import org.scalacheck.Properties
 import org.scalacheck.Prop.forAll
-import truncations.{Decimal, Truncation}
-import truncations.truncationHelpers.Bit
+import reals.Bit
+import reals.truncations.{Truncation, Decimal}
 
 
 object TestTruncations extends Properties("Truncation") {
@@ -22,16 +22,6 @@ object TestTruncations extends Properties("Truncation") {
     (x * y).abs == Double.PositiveInfinity ||
       (x * y).abs == 0.0 ||
       withinEpsilon((Truncation(x) * Truncation(y)).toDouble, x * y)
-  }
-  
-  property("twosCompliment") = forAll { (a: Vector[Bit]) =>
-    a.isEmpty || {
-      val bitSum = Decimal.addBits(a, Decimal.twosCompliment(a)) match {
-        case Decimal(_, 1, digits) => digits.tail
-        case Decimal(_, 0, digits) => digits
-      }
-      bitSum.forall(!_)
-    }
   }
   
   property("ordering") = forAll { (x: Double, y: Double) =>

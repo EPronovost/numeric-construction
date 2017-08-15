@@ -1,4 +1,4 @@
-import naturals.NaturalNumber
+import algebraic.naturals._
 import org.scalatest.FunSuite
 
 class TestNaturals extends FunSuite {

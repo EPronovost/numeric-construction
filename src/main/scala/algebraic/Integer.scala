@@ -1,7 +1,7 @@
-package integers
+package algebraic.integers
 
-import naturals._
-import properties._
+import algebraic.naturals._
+import algebraic.properties._
 
 import scala.util.{Failure, Try}
 
@@ -20,13 +20,13 @@ import scala.util.{Failure, Try}
   * together.  The axioms defining a [[https://en.wikipedia.org/wiki/Ring_(mathematics) ring]]
   * specify the relationship between addition and multiplication that must exist.
   */
-abstract class Integer extends Ring[Integer] with Ordered[Integer] with Countable[Integer] {
+sealed abstract class Integer extends Ring[Integer] with Ordered[Integer] with Countable[Integer] {
     
   /** A convenience shorthand notation */
   def -(that: Integer): Integer = this + (-that)
   
   /** The [[Integer]] of the natural number precessor. */
-  def priorNatural: Integer
+  private[integers] def priorNatural: Integer
   
   def divide(that: Integer): Try[Integer]
   
@@ -36,7 +36,9 @@ abstract class Integer extends Ring[Integer] with Ordered[Integer] with Countabl
 
 object Integer extends Countable[Integer] {
   
-  final def IntegerOne = PositiveInteger(Successor(NaturalZero))
+  final val IntegerZero: Integer = IntZero
+  
+  final val IntegerOne: Integer = PositiveInteger(NaturalNumber.NaturalOne)
   
   def apply(x: Int): Integer = x match {
     case 0 => IntegerZero
@@ -72,13 +74,13 @@ object Integer extends Countable[Integer] {
   def sign(i: Integer): Integer = i match {
     case PositiveInteger(_) => IntegerOne
     case NegativeInteger(_) => -IntegerOne
-    case IntegerZero => IntegerZero
+    case IntZero => IntZero
   }
   
   //TODO: Factorize
 }
 
-object IntegerZero extends Integer {
+private[integers] object IntZero extends Integer {
     
   override def toString: String = NaturalZero toString
   
@@ -94,7 +96,7 @@ object IntegerZero extends Integer {
   
   def compare(that: Integer): Comparison = that match {
     case NegativeInteger(_) => GreaterThan
-    case IntegerZero => Equal
+    case IntZero => Equal
     case PositiveInteger(_) => LessThan
   }
     
@@ -107,21 +109,20 @@ object IntegerZero extends Integer {
 }
 
 /** Positive integers are largely wrappers for [[NaturalNumber natural numbers]]. */
-final case class PositiveInteger(n: NaturalNumber) extends Integer {
-  assert(n != NaturalZero)
-    
+private[integers] final case class PositiveInteger(n: NaturalNumber) extends Integer {
   override def toString: String = n.toString
     
   def priorNatural: Integer = n match {
     case Successor(pre) => pre match {
-      case NaturalZero => IntegerZero
+      case NaturalZero => IntZero
       case _ => PositiveInteger(pre)
     }
+    case NaturalZero => throw new NoSuchElementException
   }
     
   def +(that: Integer): Integer = that match {
     case PositiveInteger(o) => PositiveInteger(n + o)
-    case IntegerZero => this
+    case IntZero => this
     case NegativeInteger(_) => this.priorNatural + that.priorNatural
   }
     
@@ -131,12 +132,12 @@ final case class PositiveInteger(n: NaturalNumber) extends Integer {
   /** Multiplicaiton is defined by the ring axioms. */
   def *(that: Integer): Integer = that match {
     case NegativeInteger(_) => -(this * (-that))
-    case IntegerZero => IntegerZero
+    case IntZero => IntZero
     case PositiveInteger(_) => this.priorNatural * that + that
   }
     
   def compare(that: Integer): Comparison = that match {
-    case NegativeInteger(_) | IntegerZero => GreaterThan
+    case NegativeInteger(_) | IntZero => GreaterThan
     case PositiveInteger(o) => n.compare(o)
   }
     
@@ -144,7 +145,7 @@ final case class PositiveInteger(n: NaturalNumber) extends Integer {
     
   def cosetOf(that: Integer): Integer = that match {
     case NegativeInteger(_) => this.cosetOf(-that) match {
-      case IntegerZero => IntegerZero
+      case IntZero => IntZero
       case m => this - m
     }
     case _ if (that < this) => that
@@ -153,7 +154,7 @@ final case class PositiveInteger(n: NaturalNumber) extends Integer {
     
   def divide(that: Integer): Try[Integer] = Try { that match {
     case NegativeInteger(_) => -(this.divide(-that).get)
-    case IntegerZero => IntegerZero
+    case IntZero => IntZero
     case _ if (that >= this) => this.divide(that - this).get + Integer.IntegerOne
     case _ => throw RingDivisionError("does not divide")
   }}
@@ -164,16 +165,15 @@ final case class PositiveInteger(n: NaturalNumber) extends Integer {
   *
   * Most of the definitions are reductions to positive base cases.
   */
-final case class NegativeInteger(n: NaturalNumber) extends Integer {
-  assert(n != NaturalZero)
-    
+private[integers] final case class NegativeInteger(n: NaturalNumber) extends Integer {
   override def toString: String = "-" + n.toString
     
   def priorNatural: Integer = n match {
     case Successor(pre) => pre match {
-      case NaturalZero => IntegerZero
+      case NaturalZero => IntZero
       case _ => NegativeInteger(pre)
     }
+    case NaturalZero => throw new NoSuchElementException
   }
     
   def +(that: Integer): Integer = -(-this - that)
@@ -183,7 +183,7 @@ final case class NegativeInteger(n: NaturalNumber) extends Integer {
   def *(that: Integer): Integer = -(-this * that)
     
   def compare(that: Integer): Comparison = that match {
-    case PositiveInteger(_) | IntegerZero => LessThan
+    case PositiveInteger(_) | IntZero => LessThan
     case NegativeInteger(o) => o.compare(n)
   }
     

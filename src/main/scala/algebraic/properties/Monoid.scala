@@ -1,4 +1,4 @@
-package properties
+package algebraic.properties
 
 /** Commutative Monoid
   *

@@ -1,5 +1,5 @@
+import algebraic.rationals._
 import org.scalatest.FunSuite
-import rationals.Rational
 
 class TestRationals extends FunSuite {
   

@@ -1,4 +1,4 @@
-package properties
+package algebraic.properties
 
 /** The types of comparisons possible in a totally ordered set. */
 sealed trait Comparison

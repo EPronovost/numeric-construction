@@ -1,7 +1,7 @@
-package truncations.examples
+package reals.examples
 
-import truncations.Truncation
-import truncations.truncationHelpers._
+import reals.truncations._
+import reals._
 
 import scala.io.StdIn
 
@@ -15,7 +15,7 @@ import scala.io.StdIn
   */
 object NewtonDivision {
   
-  def getInitial(t: Double): Truncation = Truncation(t.signum) >> (log2(t.abs).ceil.toInt)
+  def getInitial(t: Double): Truncation = Truncation(t.signum) >> log2(t.abs).ceil.toInt
   
   def getNext(t: Truncation, x: Truncation): Truncation = (x << 1) - t * (x**2)
   

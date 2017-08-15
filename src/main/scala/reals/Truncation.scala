@@ -1,13 +1,6 @@
-package truncations
+package reals.truncations
 
-import truncations.truncationHelpers._
-
-package object truncationHelpers {
-  type Bit = Boolean
-  
-  final val LogOf2: Double = Math.log(2)
-  def log2(x: Double): Double = Math.log(x) / LogOf2
-}
+import reals._
 
 /** Truncations
   *
@@ -67,7 +60,7 @@ object Truncation {
   * @param digits the digits, where the first digit is most
   *               significant and corresponds to 2^exp^
   */
-final case class Decimal(sign: Bit, exp: Int, digits: Vector[Bit]) extends Truncation {
+private[truncations] final case class Decimal(sign: Bit, exp: Int, digits: Vector[Bit]) extends Truncation {
   
   override def toString: String =
     this.copy(exp = 0).toDouble.toString + " * 2^" + exp.toString
@@ -154,7 +147,7 @@ final case class Decimal(sign: Bit, exp: Int, digits: Vector[Bit]) extends Trunc
   def unary_- : Truncation = copy(sign = !this.sign)
 }
 
-final object Decimal {
+private[truncations] final object Decimal {
   
   def addBits(d1: Vector[Bit], d2: Vector[Bit]): Decimal = {
     assert(d1.length == d2.length)
@@ -188,7 +181,7 @@ final object Decimal {
   }
 }
 
-final object Zero extends Truncation {
+private[truncations] final object Zero extends Truncation {
   
   override def toString: String = "0"
   

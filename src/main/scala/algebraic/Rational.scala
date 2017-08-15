@@ -1,7 +1,7 @@
-package rationals
+package algebraic.rationals
 
-import integers._
-import properties.{Comparison, Countable, Equal, Field, FieldZeroDivisionError, Ordered}
+import algebraic.integers._
+import algebraic.properties._
 
 import scala.annotation.tailrec
 
@@ -9,7 +9,7 @@ import scala.annotation.tailrec
   *
   * The [[https://en.wikipedia.org/wiki/Rational_number Rational Numbers]] is the
   * [[https://en.wikipedia.org/wiki/Field_of_fractions field of fractions]] of the
-  * [[Integer integers]].  That is, it is the set of elements ''a/b'', where ''a''
+  * [[algebraic.integers.Integer integers]].  That is, it is the set of elements ''a/b'', where ''a''
   * and ''b'' are integers, and ''b != 0''.
   *
   * This defines the field operations and ordering definitions.
@@ -19,7 +19,7 @@ final case class Rational(n: Integer, d: Integer)
   extends Field[Rational]
   with Ordered[Rational]
   with Countable[Rational] {
-  if (d == IntegerZero) throw FieldZeroDivisionError
+  if (d == Integer.IntegerZero) throw FieldZeroDivisionError
   
   override def toString: String = s"$n / $d"
   
@@ -47,9 +47,9 @@ final case class Rational(n: Integer, d: Integer)
   def enumerate: Stream[Rational] = ???
   
   /** Every non-zero element of a field is a unit, so cosets are trivial. */
-  def cosetOf(that: Rational): Rational = Rational(IntegerZero)
+  def cosetOf(that: Rational): Rational = Rational(Integer.IntegerZero)
   
-  def %(that: Rational): Rational = Rational(IntegerZero)
+  def %(that: Rational): Rational = Rational(Integer.IntegerZero)
   
   def simplify: Rational = {
     val commonFactor = Integer.gcd(n, d)
@@ -62,7 +62,7 @@ object Rational {
   /** To prevent stack overflow for the underlying natural numbers, we limit the precision. */
   final val DoublePrecision = 2
   
-  final def RationalZero = Rational(IntegerZero)
+  final def RationalZero = Rational(Integer.IntegerZero)
   final def RationalOne = Rational(Integer.IntegerOne)
   
   def apply(x: Int): Rational = Rational(Integer(x))

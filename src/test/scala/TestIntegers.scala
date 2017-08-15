@@ -1,6 +1,6 @@
-import integers.{Integer, IntegerZero}
+import algebraic.integers._
+import algebraic.properties.RingDivisionError
 import org.scalatest.FunSuite
-import properties.RingDivisionError
 
 class TestIntegers extends FunSuite {
   
@@ -70,7 +70,7 @@ class TestIntegers extends FunSuite {
            myI = Integer(i);
            myJ = Integer(j);
            modulo = myI % myJ) {
-        assert(myJ.cosetOf(myI - modulo) == IntegerZero)
+        assert(myJ.cosetOf(myI - modulo) == Integer.IntegerZero)
       }
   }
   
@@ -84,7 +84,7 @@ class TestIntegers extends FunSuite {
     }
     
     for (i <- -MAX_TO_TEST to MAX_TO_TEST) {
-      assertThrows[RingDivisionError] { Integer(i) / IntegerZero }
+      assertThrows[RingDivisionError] { Integer(i) / Integer.IntegerZero }
     }
     
     for (i <- -MAX_TO_TEST to MAX_TO_TEST;
