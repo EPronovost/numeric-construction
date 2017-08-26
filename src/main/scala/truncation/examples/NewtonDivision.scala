@@ -1,7 +1,7 @@
-package reals.examples
+package truncation.examples
 
-import reals.truncations._
-import reals._
+import truncation.truncations._
+import truncation._
 
 import scala.io.StdIn
 

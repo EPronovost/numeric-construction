@@ -1,6 +1,6 @@
-package reals.truncations
+package truncation.truncations
 
-import reals._
+import truncation._
 
 /** Truncations
   *

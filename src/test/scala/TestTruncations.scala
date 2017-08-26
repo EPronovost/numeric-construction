@@ -1,7 +1,6 @@
 import org.scalacheck.Properties
 import org.scalacheck.Prop.forAll
-import reals.Bit
-import reals.truncations.{Truncation, Decimal}
+import truncation.truncations.Truncation
 
 
 object TestTruncations extends Properties("Truncation") {

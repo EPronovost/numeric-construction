@@ -1,5 +1,5 @@
 
-package object reals {
+package object truncation {
   type Bit = Boolean
   
   final val LogOf2: Double = Math.log(2)
